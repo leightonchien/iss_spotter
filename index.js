@@ -6,12 +6,12 @@
 //  *   - The IP address as a string (null if error). Example: "162.245.144.188"
 
 
-const { fetchMyIP } = require("./iss");
+const { fetchCoordsByIP } = require("./iss");
 
-fetchMyIP((error, ip) => {
+fetchCoordsByIP("174.1.70.142", (error, coords) => {
   if (error) {
     console.log("It didn't work!", error);
     return;
   }
-  console.log("It worked! Returned IP:", ip);
+  console.log("It worked! Returned Coords:", coords);
 });
