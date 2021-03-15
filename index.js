@@ -1,20 +1,35 @@
-//  * Makes a single API request to retrieve the user's IP address.
-//  * Input:
-//  *   - A callback (to pass back an error or the IP string)
-//  * Returns (via Callback):
-//  *   - An error, if any (nullable)
-//  *   - The IP address as a string (null if error). Example: "162.245.144.188"
+// Input:
+//  *   Array of data objects defining the next fly-overs of the ISS.
+//  *   [ { risetime: <number>, duration: <number> }, ... ]
+//  * Returns:
+//  *   undefined
+//  * Sideffect:
+//  *   Console log messages to make that data more human readable.
+//  *   Example output:
+//  *   Next pass at Fri Jun 01 2021 13:01:35 GMT-0700 (Pacific Daylight Time) for 465 seconds!
 
 
-const { fetchISSFlyOverTimes } = require("./iss");
+const { nextISSTimesForMyLocation } = require("./iss");
 
-const exampleCoords = { latitude: "49.27670", longitude: "-123.13000" };
+const printPassTimes = function(passTimes) {
+  for (const pass of passTimes) {
+    const datetime = new Date(0);
+    datetime.setSeconds(pass.risetime);
+    const duration = pass.duration;
+    console.log(
+      `Next pass at ${datetime.toLocaleString("en-US", {
+        timeZone: "America/Los_Angeles"
+      })} for ${duration} seconds!`
+    );
+  }
+};
 
-fetchISSFlyOverTimes(exampleCoords, (error, passTimes) => {
+
+nextISSTimesForMyLocation((error, passTimes) => {
 
   if (error) {
-    console.log("It didn't work!", error);
-    return;
+    return console.log("It didn't work!", error);
   }
-  console.log("It worked! Returned flyover times:", passTimes);
+  // success, print!
+  printPassTimes(passTimes);
 });
