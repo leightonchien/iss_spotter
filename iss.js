@@ -1,6 +1,35 @@
 const request = require('request');
 
-/**
+// Fetch Geo Coordinates by IP
+const fetchCoordsByIP = function(ip, callback) {
+    request(`https://ipvigilante.com/json/${ip}`, (error, response, body) => {
+
+      if (error) {
+        callback(error, null);
+        return;
+      }
+
+      if (response.statusCode !== 200) {
+        callback(
+          Error(
+            `Status Code ${response.statusCode} when fetching Coordinates for I{: ${body}}`
+          ),
+          null
+        );
+        return;
+      }
+      const { latitude, longitude } = JSON.parse(body).data;
+      callback(null, { latitude, longitude });
+    });
+
+    
+  };
+  
+  module.exports = { fetchCoordsByIP };
+
+
+
+/**STEP 1
  * Makes a single API request to retrieve the user's IP address.
  * Input:
  *   - A callback (to pass back an error or the IP string)
@@ -32,4 +61,3 @@ const fetchMyIP = function(callback) {
 };
 
 
-module.exports = { fetchMyIP };
