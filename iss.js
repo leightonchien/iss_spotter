@@ -14,11 +14,8 @@ const fetchMyIP = function(callback) {
 
   request(ApiIP, (error, response, body) => {
 
-    if (error) {
+    if (error) return callback(error, null);
 
-      return callback(error, null);
-    
-    }
     // if non-200 status, assume server error
     if (response.statusCode !== 200) {
 
@@ -26,13 +23,11 @@ const fetchMyIP = function(callback) {
       
       callback(Error(msg), null);
       return;
-
-    } else {
-        
-      const JSONbody = JSON.parse(body); //parse the JSON string into a object
+    } 
+      const ip = JSON.parse(body).ip; //parse the JSON string into a object
       //console.log(JSONbody); // retrieves IP
-      return callback(false, JSONbody.ip);
-    }
+      return callback(null, ip);
+    
   });
 };
 
